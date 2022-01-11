@@ -2,13 +2,21 @@ import React, { useCallback } from 'react';
 import { TodoItem, TodoItemsListProps } from '../todo-items-list/todo-items-list';
 import { StyledTodoItem } from './styled';
 import { Checkbox, Grid } from '@mui/material';
+import { updateTodo } from '../../api/todos';
 
 type TodoItemProps = TodoItem & Omit<TodoItemsListProps, 'todoItems'>;
 
-function Todo({ name, description, isDone, id, setSingleTodoIsDone }: TodoItemProps) {
-  const setTodoIsDone = useCallback(() => {
-    if (setSingleTodoIsDone) setSingleTodoIsDone({ name, description, id, isDone: true });
-  }, [name, description, id, setSingleTodoIsDone]);
+function Todo({ name, description, isDone, _id, setSingleTodoIsDone }: TodoItemProps) {
+  const setTodoIsDone = useCallback(async () => {
+    if (setSingleTodoIsDone) {
+      try {
+        await updateTodo({ name, description, _id, isDone: true });
+        setSingleTodoIsDone({ name, description, _id, isDone: true });
+      } catch (error) {
+        console.log('Update Todo error', error);
+      }
+    }
+  }, [name, description, _id, setSingleTodoIsDone]);
 
   return (
     <StyledTodoItem container>

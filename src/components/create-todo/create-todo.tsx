@@ -1,26 +1,31 @@
-import React, { Dispatch, useCallback, useMemo, useState } from 'react';
+import React, { useCallback, useMemo, useState } from 'react';
 import { TextField, Typography } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
 import { StyledAddBtn, StyledCreateTodo, StyledCreateTodoWrap, StyledFabIconClose } from './styled';
-import { TodoItem } from '../todo-items-list/todo-items-list';
+import { TodoItemStructure } from '../todo-items-list/todo-items-list';
+import { createTodo } from '../../api/todos';
 
 interface CreateTodoProps {
-  create: Dispatch<TodoItem>;
   isActive: boolean;
   setIsActive: () => void;
+  updateTodoList: () => void;
 }
 
-const CreateTodo = ({ create, isActive, setIsActive }: CreateTodoProps) => {
-  const emptyTodo: TodoItem = useMemo(() => ({ name: '', description: '', isDone: false, id: 0 }), []);
-  const [todo, setTodo] = useState<TodoItem>(emptyTodo);
+const CreateTodo = ({ isActive, setIsActive, updateTodoList }: CreateTodoProps) => {
+  const emptyTodo: TodoItemStructure = useMemo(() => ({ name: '', description: '', isDone: false }), []);
+  const [todo, setTodo] = useState<TodoItemStructure>(emptyTodo);
 
-  const createTodo = useCallback(() => {
-    const newTodo = { ...todo, id: Date.now() };
+  const handleCreateTodo = useCallback(async () => {
+    try {
+      await createTodo(todo);
+      await updateTodoList();
 
-    create(newTodo);
-    setTodo(emptyTodo);
-    setIsActive();
-  }, [create, emptyTodo, todo, setIsActive]);
+      setTodo(emptyTodo);
+      setIsActive();
+    } catch (error) {
+      console.log('Create Todo error', error);
+    }
+  }, [emptyTodo, todo, setIsActive, updateTodoList]);
 
   const handleNameChanged = useCallback((event: React.ChangeEvent<HTMLInputElement>) => {
     setTodo({ ...todo, name: event.target.value });
@@ -42,7 +47,7 @@ const CreateTodo = ({ create, isActive, setIsActive }: CreateTodoProps) => {
                    onChange={ handleNameChanged }/>
         <TextField label="Add a description" variant="standard" value={ todo.description }
                    onChange={ handleDescriptionChanged }/>
-        <StyledAddBtn variant="outlined" onClick={ createTodo } disabled={ !todo.name }>Create</StyledAddBtn>
+        <StyledAddBtn variant="outlined" onClick={ handleCreateTodo } disabled={ !todo.name }>Create</StyledAddBtn>
       </StyledCreateTodo>
     </StyledCreateTodoWrap>
   );

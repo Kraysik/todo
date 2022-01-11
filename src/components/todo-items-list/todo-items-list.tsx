@@ -6,17 +6,19 @@ export interface TodoItemsListProps {
   setSingleTodoIsDone?: Dispatch<TodoItem>;
 }
 
-export interface TodoItem {
-  id: number;
+export interface TodoItemStructure {
   name: string;
   description?: string;
   isDone: boolean;
 }
 
+export interface TodoItem extends TodoItemStructure {
+  _id: string
+}
 function TodoItemsList({ todoItems, setSingleTodoIsDone }: TodoItemsListProps) {
   return (
     <>
-      { todoItems.map(todoItem => <Todo key={ todoItem.id } setSingleTodoIsDone={setSingleTodoIsDone} { ...todoItem } />) }
+      { todoItems.map(todoItem => <Todo key={ todoItem._id } setSingleTodoIsDone={setSingleTodoIsDone} { ...todoItem } />) }
     </>
   );
 }
