@@ -27,7 +27,6 @@ function App() {
         ? <CreateTodo onClose={changeTodoFormVisibility}/>
         : null }
 
-
       <Container maxWidth="lg">
         <StyledAppTitle variant="h3">Simple design-less "todo" app</StyledAppTitle>
 
