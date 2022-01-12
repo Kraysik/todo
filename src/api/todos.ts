@@ -1,8 +1,10 @@
 import { API } from './axiosConfig';
 import { TodoItem, TodoItemStructure } from '../components/todo-items-list/todo-items-list';
 
-export const getAllTodo = () => {
-  return API.get<TodoItem[]>('/todos');
+export const getAllTodo = (query: string = '') => {
+  query = query !== '' ? `?${query}` : '';
+
+  return API.get<TodoItem[]>(`/todos${query}`);
 };
 
 export const createTodo = ({ name, description, isDone }: TodoItemStructure) => {

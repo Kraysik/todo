@@ -1,6 +1,10 @@
 import { Button, Fab, Grid, Stack, styled } from '@mui/material';
 
-export const StyledCreateTodoWrap = styled(Grid)`
+interface TodoWrapProps {
+  transitionDelay: number;
+}
+
+export const StyledCreateTodoWrap = styled(Grid)<TodoWrapProps>`
   position: fixed;
   left: 0;
   top: 0;
@@ -8,7 +12,7 @@ export const StyledCreateTodoWrap = styled(Grid)`
   height: 100vh;
   background-color: #fff;
   opacity: 0;
-  transition: opacity .15s ease;
+  transition: opacity ${({transitionDelay}) => transitionDelay}ms ease;
   pointer-events: none;
   z-index: 99;
   

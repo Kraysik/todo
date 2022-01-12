@@ -1,4 +1,4 @@
-import React, { useCallback, useMemo, useState } from 'react';
+import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { TextField, Typography } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
 import { StyledAddBtn, StyledCreateTodo, StyledCreateTodoWrap, StyledFabIconClose } from './styled';
@@ -6,26 +6,35 @@ import { TodoItemStructure } from '../todo-items-list/todo-items-list';
 import { createTodo } from '../../api/todos';
 
 interface CreateTodoProps {
-  isActive: boolean;
-  setIsActive: () => void;
-  updateTodoList: () => void;
+  onClose: () => void;
 }
 
-const CreateTodo = ({ isActive, setIsActive, updateTodoList }: CreateTodoProps) => {
+// Задержка анимации и таймаута вызова метода onClose в мс.
+const transitionCloseDelay: number = 150;
+
+const CreateTodo = ({ onClose }: CreateTodoProps) => {
   const emptyTodo: TodoItemStructure = useMemo(() => ({ name: '', description: '', isDone: false }), []);
   const [todo, setTodo] = useState<TodoItemStructure>(emptyTodo);
+  const [isActive, setIsActive] = useState<Boolean>(false);
+
+  useEffect(() => {
+    setIsActive(true);
+  }, [])
+
+  const handleClose = useCallback(() => {
+    setIsActive(false);
+    setTimeout(() => onClose(), transitionCloseDelay)
+  }, [onClose]);
 
   const handleCreateTodo = useCallback(async () => {
     try {
       await createTodo(todo);
-      await updateTodoList();
 
-      setTodo(emptyTodo);
-      setIsActive();
+      handleClose();
     } catch (error) {
       console.log('Create Todo error', error);
     }
-  }, [emptyTodo, todo, setIsActive, updateTodoList]);
+  }, [todo, handleClose]);
 
   const handleNameChanged = useCallback((event: React.ChangeEvent<HTMLInputElement>) => {
     setTodo({ ...todo, name: event.target.value });
@@ -36,9 +45,9 @@ const CreateTodo = ({ isActive, setIsActive, updateTodoList }: CreateTodoProps) 
   }, [todo]);
 
   return (
-    <StyledCreateTodoWrap container justifyContent="center" alignItems="center" className={ isActive ? 'active' : '' }>
+    <StyledCreateTodoWrap container justifyContent="center" alignItems="center" className={ isActive ? 'active' : '' } transitionDelay={transitionCloseDelay}>
       <StyledCreateTodo spacing={ 2 }>
-        <StyledFabIconClose color="secondary" aria-label="close" size="medium" onClick={setIsActive}>
+        <StyledFabIconClose color="secondary" aria-label="close" size="medium" onClick={handleClose}>
           <CloseIcon/>
         </StyledFabIconClose>
 
