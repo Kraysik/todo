@@ -22,3 +22,7 @@ export const updateTodo = ({ name, description, isDone, _id }: TodoItem) => {
     isDone,
   });
 };
+
+export const deleteTodo = (_id: string) => {
+  return API.delete<TodoItemStructure>(`/todo/delete/${_id}`);
+}

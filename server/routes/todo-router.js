@@ -33,4 +33,10 @@ router.put('/todo/update/:id', async (ctx) => {
   ctx.body = todo;
 });
 
+router.delete('/todo/delete/:id', async (ctx) => {
+  const todo = await Todo.deleteOne({_id: ctx.params.id});
+
+  ctx.body = todo;
+});
+
 module.exports = router;

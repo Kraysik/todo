@@ -14,6 +14,7 @@ const ActiveTodos = () => {
 
     setIsTodos(true);
   };
+
   useEffect(() => {
     try {
       getTodoList();
