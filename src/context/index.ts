@@ -8,6 +8,7 @@ export interface AppContextInterface {
   setIsTodosShowed: Dispatch<boolean>;
 
   getTodos: (query?: string) => void;
+  removeTodoFromList: (todo: TodoItem) => void;
 }
 
 export const AppContext = createContext<AppContextInterface | null>(null);

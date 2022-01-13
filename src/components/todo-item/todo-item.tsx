@@ -7,25 +7,25 @@ import DeleteIcon from '@mui/icons-material/Delete';
 
 type TodoItemProps = TodoItem & Omit<TodoItemsListProps, 'todoItems'>;
 
-function Todo({ name, description, isDone, _id, setSingleTodoIsDone }: TodoItemProps) {
+function Todo({ name, description, isDone, _id, removeTodoFromList }: TodoItemProps) {
+
   const setTodoIsDone = useCallback(async () => {
-    if (setSingleTodoIsDone) {
-      try {
-        await updateTodo({ name, description, _id, isDone: true });
-        setSingleTodoIsDone({ name, description, _id, isDone: true });
-      } catch (error) {
-        console.log('Update Todo error', error);
-      }
+    try {
+      await updateTodo({ name, description, _id, isDone: true });
+      removeTodoFromList({ name, description, _id, isDone: true });
+    } catch (error) {
+      console.log('Update Todo error', error);
     }
-  }, [name, description, _id, setSingleTodoIsDone]);
+  }, [name, description, _id, removeTodoFromList]);
 
   const handleDeleteTodo = useCallback(async () => {
     try {
       await deleteTodo(_id);
+      removeTodoFromList({ name, description, _id, isDone });
     } catch (error) {
       console.log('Delete todo error', error);
     }
-  }, [_id])
+  }, [name, description, _id, isDone, removeTodoFromList]);
 
   return (
     <StyledTodoItem container>
@@ -39,7 +39,7 @@ function Todo({ name, description, isDone, _id, setSingleTodoIsDone }: TodoItemP
         { description ?? <div className="description">{ description }</div> }
       </Grid>
       <StyledDeleteBtnWrap item className="delete">
-        <StyledDeleteBtn container item justifyContent="center" alignItems="center" onClick={handleDeleteTodo}>
+        <StyledDeleteBtn container item justifyContent="center" alignItems="center" onClick={ handleDeleteTodo }>
           <DeleteIcon/>
         </StyledDeleteBtn>
       </StyledDeleteBtnWrap>

@@ -6,7 +6,7 @@ import Spinner from '../ui/spinner/spinner';
 import { AppContext, AppContextInterface } from '../../context';
 
 const CompletedTodos = () => {
-  const {todos, isTodosShowed, getTodos} = useContext(AppContext) as AppContextInterface;
+  const {todos, isTodosShowed, getTodos, removeTodoFromList} = useContext(AppContext) as AppContextInterface;
 
   useEffect(() => {
     try {
@@ -19,7 +19,7 @@ const CompletedTodos = () => {
   const renderTodosContent = useMemo(() => (
     <>
       { todos.length
-        ? <StyledCompletedTodos><TodoItemsList todoItems={ todos }/></StyledCompletedTodos>
+        ? <StyledCompletedTodos><TodoItemsList removeTodoFromList={removeTodoFromList} todoItems={ todos }/></StyledCompletedTodos>
         : <Typography variant="h4">You have not any active todos :(</Typography> }
     </>
   ), [todos]);

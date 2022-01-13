@@ -1,11 +1,11 @@
-import React, { useCallback, useContext, useEffect, useMemo } from 'react';
+import React, { useContext, useEffect, useMemo } from 'react';
 import TodoItemsList from '../todo-items-list/todo-items-list';
 import { Typography } from '@mui/material';
 import Spinner from '../ui/spinner/spinner';
 import { AppContext, AppContextInterface } from '../../context';
 
 const ActiveTodos = () => {
-  const {todos, setTodos, isTodosShowed, getTodos} = useContext(AppContext) as AppContextInterface;
+  const {todos, isTodosShowed, getTodos, removeTodoFromList} = useContext(AppContext) as AppContextInterface;
 
   useEffect(() => {
     try {
@@ -15,17 +15,13 @@ const ActiveTodos = () => {
     }
   }, [getTodos]);
 
-  const setTodoIsDone = useCallback((todo) => {
-    setTodos(todos.filter(t => t._id !== todo._id));
-  }, [todos, setTodos]);
-
   const renderTodosContent = useMemo(() => (
     <>
       { todos.length
-        ? <TodoItemsList setSingleTodoIsDone={ setTodoIsDone } todoItems={ todos }/>
+        ? <TodoItemsList removeTodoFromList={ removeTodoFromList } todoItems={ todos }/>
         : <Typography variant="h4">You have not any active todos :(</Typography> }
     </>
-  ), [todos, setTodoIsDone]);
+  ), [todos, removeTodoFromList]);
 
   return (
     <>

@@ -14,7 +14,7 @@ interface CreateTodoProps {
 const transitionCloseDelay: number = 150;
 
 const CreateTodo = ({ onClose }: CreateTodoProps) => {
-  const {getTodos} = useContext(AppContext) as AppContextInterface;
+  const { getTodos } = useContext(AppContext) as AppContextInterface;
 
   const emptyTodo: TodoItemStructure = useMemo(() => ({ name: '', description: '', isDone: false }), []);
   const [todo, setTodo] = useState<TodoItemStructure>(emptyTodo);

@@ -3,7 +3,7 @@ import Todo from '../todo-item/todo-item';
 
 export interface TodoItemsListProps {
   todoItems: Array<TodoItem>;
-  setSingleTodoIsDone?: Dispatch<TodoItem>;
+  removeTodoFromList: Dispatch<TodoItem>;
 }
 
 export interface TodoItemStructure {
@@ -16,10 +16,10 @@ export interface TodoItem extends TodoItemStructure {
   _id: string
 }
 
-function TodoItemsList({ todoItems, setSingleTodoIsDone }: TodoItemsListProps) {
+function TodoItemsList({ todoItems, removeTodoFromList }: TodoItemsListProps) {
   return (
     <>
-      { todoItems.map(todoItem => <Todo key={ todoItem._id } setSingleTodoIsDone={setSingleTodoIsDone} { ...todoItem } />) }
+      { todoItems.map(todoItem => <Todo key={ todoItem._id } removeTodoFromList={removeTodoFromList} { ...todoItem } />) }
     </>
   );
 }

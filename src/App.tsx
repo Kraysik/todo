@@ -32,6 +32,10 @@ function App() {
     setIsTodosShowed(true);
   }, []);
 
+  const removeTodoFromList = useCallback((todo: TodoItem) => {
+    setTodos(todos.filter(t => t._id !== todo._id));
+  }, [todos, setTodos]);
+
   const changeTodoFormVisibility = useCallback(() => {
     setIsTodoFormShow(!isTodoFormShow);
   }, [isTodoFormShow]);
@@ -42,7 +46,8 @@ function App() {
       setTodos,
       isTodosShowed,
       setIsTodosShowed,
-      getTodos: getTodoList
+      getTodos: getTodoList,
+      removeTodoFromList
     }}>
       <StyledApp className="app">
         { isTodoFormShow
