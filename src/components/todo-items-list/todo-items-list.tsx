@@ -15,6 +15,7 @@ export interface TodoItemStructure {
 export interface TodoItem extends TodoItemStructure {
   _id: string
 }
+
 function TodoItemsList({ todoItems, setSingleTodoIsDone }: TodoItemsListProps) {
   return (
     <>

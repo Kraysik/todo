@@ -1,31 +1,23 @@
-import React, { useCallback, useEffect, useMemo, useState } from 'react';
-import TodoItemsList, { TodoItem } from '../todo-items-list/todo-items-list';
-import { getAllTodo } from '../../api/todos';
+import React, { useCallback, useContext, useEffect, useMemo } from 'react';
+import TodoItemsList from '../todo-items-list/todo-items-list';
 import { Typography } from '@mui/material';
 import Spinner from '../ui/spinner/spinner';
+import { AppContext, AppContextInterface } from '../../context';
 
 const ActiveTodos = () => {
-  const [todos, setTodos] = useState<Array<TodoItem>>([]);
-  const [isTodos, setIsTodos] = useState<boolean>(false);
-
-  const getTodoList = async () => {
-    const { data } = await getAllTodo();
-    setTodos(data);
-
-    setIsTodos(true);
-  };
+  const {todos, setTodos, isTodosShowed, getTodos} = useContext(AppContext) as AppContextInterface;
 
   useEffect(() => {
     try {
-      getTodoList();
+      getTodos();
     } catch (error) {
       console.log('Fetch active todos error', error);
     }
-  }, []);
+  }, [getTodos]);
 
   const setTodoIsDone = useCallback((todo) => {
     setTodos(todos.filter(t => t._id !== todo._id));
-  }, [todos]);
+  }, [todos, setTodos]);
 
   const renderTodosContent = useMemo(() => (
     <>
@@ -37,7 +29,7 @@ const ActiveTodos = () => {
 
   return (
     <>
-      { isTodos
+      { isTodosShowed
         ? renderTodosContent
         : <Spinner/> }
     </>

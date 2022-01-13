@@ -1,9 +1,10 @@
-import React, { useCallback, useEffect, useMemo, useState } from 'react';
+import React, { useCallback, useContext, useEffect, useMemo, useState } from 'react';
 import { TextField, Typography } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
 import { StyledAddBtn, StyledCreateTodo, StyledCreateTodoWrap, StyledFabIconClose } from './styled';
 import { TodoItemStructure } from '../todo-items-list/todo-items-list';
 import { createTodo } from '../../api/todos';
+import { AppContext, AppContextInterface } from '../../context';
 
 interface CreateTodoProps {
   onClose: () => void;
@@ -13,6 +14,8 @@ interface CreateTodoProps {
 const transitionCloseDelay: number = 150;
 
 const CreateTodo = ({ onClose }: CreateTodoProps) => {
+  const {getTodos} = useContext(AppContext) as AppContextInterface;
+
   const emptyTodo: TodoItemStructure = useMemo(() => ({ name: '', description: '', isDone: false }), []);
   const [todo, setTodo] = useState<TodoItemStructure>(emptyTodo);
   const [isActive, setIsActive] = useState<Boolean>(false);
@@ -29,12 +32,13 @@ const CreateTodo = ({ onClose }: CreateTodoProps) => {
   const handleCreateTodo = useCallback(async () => {
     try {
       await createTodo(todo);
+      await getTodos();
 
       handleClose();
     } catch (error) {
       console.log('Create Todo error', error);
     }
-  }, [todo, handleClose]);
+  }, [todo, handleClose, getTodos]);
 
   const handleNameChanged = useCallback((event: React.ChangeEvent<HTMLInputElement>) => {
     setTodo({ ...todo, name: event.target.value });

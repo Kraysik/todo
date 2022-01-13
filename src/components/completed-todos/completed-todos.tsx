@@ -1,28 +1,20 @@
-import React, { useEffect, useMemo, useState } from 'react';
-import TodoItemsList, { TodoItem } from '../todo-items-list/todo-items-list';
+import React, { useContext, useEffect, useMemo } from 'react';
+import TodoItemsList from '../todo-items-list/todo-items-list';
 import { StyledCompletedTodos } from './styled';
-import { getAllTodo } from '../../api/todos';
 import { Typography } from '@mui/material';
 import Spinner from '../ui/spinner/spinner';
+import { AppContext, AppContextInterface } from '../../context';
 
 const CompletedTodos = () => {
-  const [todos, setTodos] = useState<Array<TodoItem>>([]);
-  const [isTodos, setIsTodos] = useState<boolean>(false);
-
-  const getTodos = async () => {
-    const { data } = await getAllTodo('isDone=true');
-    setTodos(data);
-
-    setIsTodos(true);
-  };
+  const {todos, isTodosShowed, getTodos} = useContext(AppContext) as AppContextInterface;
 
   useEffect(() => {
     try {
-      getTodos();
+      getTodos('isDone=true');
     } catch (error) {
       console.log('Fetch completed todos error', error);
     }
-  }, []);
+  }, [getTodos]);
 
   const renderTodosContent = useMemo(() => (
     <>
@@ -34,7 +26,7 @@ const CompletedTodos = () => {
 
   return (
     <>
-      { isTodos
+      { isTodosShowed
         ? renderTodosContent
         : <Spinner/> }
     </>
