@@ -1,9 +1,8 @@
-import React, { Dispatch } from 'react';
+import React from 'react';
 import Todo from '../todo-item/todo-item';
 
 export interface TodoItemsListProps {
   todoItems: Array<TodoItem>;
-  removeTodoFromList: Dispatch<TodoItem>;
 }
 
 export interface TodoItemStructure {
@@ -16,10 +15,10 @@ export interface TodoItem extends TodoItemStructure {
   _id: string
 }
 
-function TodoItemsList({ todoItems, removeTodoFromList }: TodoItemsListProps) {
+function TodoItemsList({ todoItems }: TodoItemsListProps) {
   return (
     <>
-      { todoItems.map(todoItem => <Todo key={ todoItem._id } removeTodoFromList={removeTodoFromList} { ...todoItem } />) }
+      { todoItems.map(todoItem => <Todo key={ todoItem._id } { ...todoItem } />) }
     </>
   );
 }

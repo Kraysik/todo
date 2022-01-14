@@ -1,35 +1,34 @@
-import React, { useContext, useEffect, useMemo } from 'react';
+import React, { useEffect, useMemo } from 'react';
 import TodoItemsList from '../todo-items-list/todo-items-list';
 import { StyledCompletedTodos } from './styled';
 import { Typography } from '@mui/material';
 import Spinner from '../ui/spinner/spinner';
-import { AppContext, AppContextInterface } from '../../context';
+import { UseTypedSelector } from '../../hooks/useTypedSelector';
+import { fetchCompletedTodos } from '../../store/action-creators/todo';
+import { useDispatch } from 'react-redux';
 
 const CompletedTodos = () => {
-  const {todos, isTodosShowed, getTodos, removeTodoFromList} = useContext(AppContext) as AppContextInterface;
+  const { todos, isLoading } = UseTypedSelector(state => state.todo);
+  const dispatch = useDispatch();
 
   useEffect(() => {
-    try {
-      getTodos('isDone=true');
-    } catch (error) {
-      console.log('Fetch completed todos error', error);
-    }
-  }, [getTodos]);
+    dispatch(fetchCompletedTodos());
+  }, [dispatch]);
 
   const renderTodosContent = useMemo(() => (
     <>
       { todos.length
-        ? <StyledCompletedTodos><TodoItemsList removeTodoFromList={removeTodoFromList} todoItems={ todos }/></StyledCompletedTodos>
+        ? <StyledCompletedTodos><TodoItemsList todoItems={ todos }/></StyledCompletedTodos>
         : <Typography variant="h4">You have not any active todos :(</Typography> }
     </>
   ), [todos]);
 
+  if (isLoading) {
+    return <Spinner/>;
+  }
+
   return (
-    <>
-      { isTodosShowed
-        ? renderTodosContent
-        : <Spinner/> }
-    </>
+    renderTodosContent
   );
 };
 

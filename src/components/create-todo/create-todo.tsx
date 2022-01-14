@@ -1,10 +1,11 @@
-import React, { useCallback, useContext, useEffect, useMemo, useState } from 'react';
+import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { TextField, Typography } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
 import { StyledAddBtn, StyledCreateTodo, StyledCreateTodoWrap, StyledFabIconClose } from './styled';
 import { TodoItemStructure } from '../todo-items-list/todo-items-list';
+import { useDispatch } from 'react-redux';
+import { fetchTodos } from '../../store/action-creators/todo';
 import { createTodo } from '../../api/todos';
-import { AppContext, AppContextInterface } from '../../context';
 
 interface CreateTodoProps {
   onClose: () => void;
@@ -14,7 +15,7 @@ interface CreateTodoProps {
 const transitionCloseDelay: number = 150;
 
 const CreateTodo = ({ onClose }: CreateTodoProps) => {
-  const { getTodos } = useContext(AppContext) as AppContextInterface;
+  const dispatch = useDispatch();
 
   const emptyTodo: TodoItemStructure = useMemo(() => ({ name: '', description: '', isDone: false }), []);
   const [todo, setTodo] = useState<TodoItemStructure>(emptyTodo);
@@ -22,23 +23,19 @@ const CreateTodo = ({ onClose }: CreateTodoProps) => {
 
   useEffect(() => {
     setIsActive(true);
-  }, [])
+  }, []);
 
   const handleClose = useCallback(() => {
     setIsActive(false);
-    setTimeout(() => onClose(), transitionCloseDelay)
+    setTimeout(() => onClose(), transitionCloseDelay);
   }, [onClose]);
 
   const handleCreateTodo = useCallback(async () => {
-    try {
-      await createTodo(todo);
-      await getTodos();
+    await createTodo(todo);
+    dispatch(fetchTodos());
 
-      handleClose();
-    } catch (error) {
-      console.log('Create Todo error', error);
-    }
-  }, [todo, handleClose, getTodos]);
+    handleClose();
+  }, [dispatch, handleClose, todo]);
 
   const handleNameChanged = useCallback((event: React.ChangeEvent<HTMLInputElement>) => {
     setTodo({ ...todo, name: event.target.value });
@@ -49,9 +46,10 @@ const CreateTodo = ({ onClose }: CreateTodoProps) => {
   }, [todo]);
 
   return (
-    <StyledCreateTodoWrap container justifyContent="center" alignItems="center" className={ isActive ? 'active' : '' } transitionDelay={transitionCloseDelay}>
+    <StyledCreateTodoWrap container justifyContent="center" alignItems="center" className={ isActive ? 'active' : '' }
+                          transitionDelay={ transitionCloseDelay }>
       <StyledCreateTodo spacing={ 2 }>
-        <StyledFabIconClose color="secondary" aria-label="close" size="medium" onClick={handleClose}>
+        <StyledFabIconClose color="secondary" aria-label="close" size="medium" onClick={ handleClose }>
           <CloseIcon/>
         </StyledFabIconClose>
 

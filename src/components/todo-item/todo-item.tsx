@@ -2,30 +2,22 @@ import React, { useCallback } from 'react';
 import { TodoItem, TodoItemsListProps } from '../todo-items-list/todo-items-list';
 import { StyledDeleteBtn, StyledDeleteBtnWrap, StyledTodoItem } from './styled';
 import { Checkbox, Grid } from '@mui/material';
-import { deleteTodo, updateTodo } from '../../api/todos';
 import DeleteIcon from '@mui/icons-material/Delete';
+import { useDispatch } from 'react-redux';
+import { deleteTodoAction, updateTodoAction } from '../../store/action-creators/todo';
 
 type TodoItemProps = TodoItem & Omit<TodoItemsListProps, 'todoItems'>;
 
-function Todo({ name, description, isDone, _id, removeTodoFromList }: TodoItemProps) {
+function Todo({ name, description, isDone, _id }: TodoItemProps) {
+  const dispatch = useDispatch();
 
   const setTodoIsDone = useCallback(async () => {
-    try {
-      await updateTodo({ name, description, _id, isDone: true });
-      removeTodoFromList({ name, description, _id, isDone: true });
-    } catch (error) {
-      console.log('Update Todo error', error);
-    }
-  }, [name, description, _id, removeTodoFromList]);
+    dispatch(updateTodoAction({ name, description, _id, isDone: true }));
+  }, [name, description, _id, dispatch]);
 
   const handleDeleteTodo = useCallback(async () => {
-    try {
-      await deleteTodo(_id);
-      removeTodoFromList({ name, description, _id, isDone });
-    } catch (error) {
-      console.log('Delete todo error', error);
-    }
-  }, [name, description, _id, isDone, removeTodoFromList]);
+    dispatch(deleteTodoAction(_id));
+  }, [_id, dispatch]);
 
   return (
     <StyledTodoItem container>
