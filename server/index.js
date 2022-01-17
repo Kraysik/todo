@@ -1,15 +1,14 @@
 const Koa = require('koa');
-const Router = require('koa-router');
 const cors = require('@koa/cors');
 const bodyParser = require('koa-bodyparser');
 const json = require('koa-json');
 const mongoose = require('mongoose');
-const config = require('config');
-const Todo = require('./models/Todo');
 const todoRouter = require('./routes/todo-router');
 
-const PORT = config.get('serverPort');
-const DB_URL = config.get('dbUrl');
+require('dotenv').config();
+
+const PORT = process.env.PORT;
+const DB_URL = process.env.DB_URL;
 
 const app = new Koa();
 

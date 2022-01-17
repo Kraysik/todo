@@ -1,4 +1,4 @@
 {
   "serverPort": 3005,
-  "dbUrl": "mongodb+srv://Kraysik:Kraysik_69@todo.0vy18.mongodb.net/Todo?retryWrites=true&w=majority"
+  "dbUrl":
 }
