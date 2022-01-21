@@ -1,21 +1,18 @@
-import React, { useCallback, useEffect, useMemo, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import { TextField, Typography } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
 import { StyledAddBtn, StyledCreateTodo, StyledCreateTodoWrap, StyledFabIconClose } from './styled';
 import { TodoItemStructure } from '../todo-items-list/todo-items-list';
-import { useDispatch } from 'react-redux';
-import { fetchTodos } from '../../store/action-creators/todo';
-import { createTodo } from '../../api/todos';
-
-interface CreateTodoProps {
-  onClose: () => void;
-}
+import { todoApi } from '../../services/todoService';
+import { showCreateTodoForm } from '../../store/reducers/uiSlice';
+import { useAppDispatch } from '../../hooks/redux';
 
 // Задержка анимации и таймаута вызова метода onClose в мс.
 const transitionCloseDelay: number = 150;
 
-const CreateTodo = ({ onClose }: CreateTodoProps) => {
-  const dispatch = useDispatch();
+const CreateTodo = () => {
+  const [createTodo] = todoApi.useCreateMutation();
+  const dispatch = useAppDispatch();
 
   const emptyTodo: TodoItemStructure = useMemo(() => ({ name: '', description: '', isDone: false }), []);
   const [todo, setTodo] = useState<TodoItemStructure>(emptyTodo);
@@ -25,25 +22,27 @@ const CreateTodo = ({ onClose }: CreateTodoProps) => {
     setIsActive(true);
   }, []);
 
-  const handleClose = useCallback(() => {
+  const handleClose = () => {
     setIsActive(false);
-    setTimeout(() => onClose(), transitionCloseDelay);
-  }, [onClose]);
+    setTimeout(() => dispatch(showCreateTodoForm()), transitionCloseDelay);
+  };
 
-  const handleCreateTodo = useCallback(async () => {
-    await createTodo(todo);
-    dispatch(fetchTodos());
-
+  const handleCreateTodo = () => {
+    createTodo(todo);
     handleClose();
-  }, [dispatch, handleClose, todo]);
+  };
 
-  const handleNameChanged = useCallback((event: React.ChangeEvent<HTMLInputElement>) => {
+  /* TODO
+  *   Как избежать ререндеров всего компонента, если я хочу обновить только одно свойство?
+  *   Не могу вкурить, как это сделать.
+  * */
+  const handleNameChanged = (event: React.ChangeEvent<HTMLInputElement>) => {
     setTodo({ ...todo, name: event.target.value });
-  }, [todo]);
+  };
 
-  const handleDescriptionChanged = useCallback((event: React.ChangeEvent<HTMLInputElement>) => {
+  const handleDescriptionChanged = (event: React.ChangeEvent<HTMLInputElement>) => {
     setTodo({ ...todo, description: event.target.value });
-  }, [todo]);
+  };
 
   return (
     <StyledCreateTodoWrap container justifyContent="center" alignItems="center" className={ isActive ? 'active' : '' }

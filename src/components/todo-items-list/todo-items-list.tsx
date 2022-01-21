@@ -2,7 +2,7 @@ import React from 'react';
 import Todo from '../todo-item/todo-item';
 
 export interface TodoItemsListProps {
-  todoItems: Array<TodoItem>;
+  todoItems: TodoItem[];
 }
 
 export interface TodoItemStructure {
