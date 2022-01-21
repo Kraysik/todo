@@ -5,38 +5,36 @@ const router = new Router();
 
 router.get('/todos', async (ctx) => {
   const isDoneQuery = ctx.request.query.isDone ?? false;
-  const todos = await Todo.find({ isDone: isDoneQuery });
-
-  ctx.body = todos;
+  ctx.body = await Todo.find({ isDone: isDoneQuery });
 });
 
 router.post('/todo/create', async (ctx) => {
   const requestBody = ctx.request.body;
-  const todo = await Todo.create({
+  ctx.body = await Todo.create({
     name: requestBody.name,
     description: requestBody.description,
     isDone: false,
   });
-
-  ctx.body = todo;
 });
 
 router.put('/todo/update/:id', async (ctx) => {
   const requestBody = ctx.request.body;
 
-  const todo = await Todo.findOneAndUpdate({ _id: ctx.params.id }, {
+  ctx.body = await Todo.findOneAndUpdate({ _id: ctx.params.id }, {
     name: requestBody.name,
     description: requestBody.description,
     isDone: requestBody.isDone,
-  });
+  }, {new: true});
 
-  ctx.body = todo;
 });
 
 router.delete('/todo/delete/:id', async (ctx) => {
-  const todo = await Todo.deleteOne({_id: ctx.params.id});
-
-  ctx.body = todo;
+  try {
+    await Todo.deleteOne({_id: ctx.params.id});
+    ctx.body = [];
+  } catch (error) {
+    console.log(error);
+  }
 });
 
 module.exports = router;
