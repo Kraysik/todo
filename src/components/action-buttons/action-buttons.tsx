@@ -6,10 +6,6 @@ import { changeCurrentTodoComponent, showCreateTodoForm } from '../../store/redu
 
 const ActionButtons = () => {
   const {isUncompletedTodos} = useAppSelector(state => state.ui);
-  // TODO Катстаи, в разделе best practices, доки редакса они 'Strongly Recommended' использовать апи хуков
-  //  вместо классического connect API
-  //  https://redux.js.org/style-guide/style-guide#use-the-react-redux-hooks-api
-  //  https://redux.js.org/style-guide/style-guide#connect-more-components-to-read-data-from-the-store
   const dispatch = useAppDispatch();
 
   const handleChangeTodoComponent = () => {

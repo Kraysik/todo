@@ -6,10 +6,7 @@ import TodoContainer from './components/todo-container/todo-container';
 import ActionButtons from './components/action-buttons/action-buttons';
 import { useAppSelector } from './hooks/redux';
 
-/* TODO
-*   Вынес форму в отдельный компонент со своим состоянием, но все ровно
-*   Апп ререндерится, когда она открывается...
-*/
+
 const CreateTodoForm = () => {
   const { isCreate } = useAppSelector(state => state.ui);
 

@@ -3,19 +3,20 @@ import { TodoItem } from '../todo-items-list/todo-items-list';
 import { StyledDeleteBtn, StyledDeleteBtnWrap, StyledTodoItem } from './styled';
 import { Checkbox, Grid } from '@mui/material';
 import DeleteIcon from '@mui/icons-material/Delete';
-import { todoApi } from '../../services/todoService';
+import { useDeleteTodo } from '../../hooks/useDeleteTodo';
+import { useUpdateTodo } from '../../hooks/useUpdateTodo';
 
 
 function Todo(todo: TodoItem) {
-  const [updateTodo] = todoApi.useUpdateMutation();
-  const [deleteTodo] = todoApi.useDeleteMutation();
+  const deleteTodoM = useDeleteTodo();
+  const updateTodoM = useUpdateTodo();
 
   const handleUpdate = () => {
-    updateTodo({ ...todo, isDone: true });
+    updateTodoM.mutateAsync({ ...todo, isDone: true });
   };
 
   const handleDeleteTodo = () => {
-    deleteTodo(todo._id);
+    deleteTodoM.mutateAsync(todo._id);
   };
 
   return (

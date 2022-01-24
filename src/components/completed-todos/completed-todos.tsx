@@ -1,21 +1,25 @@
 import React from 'react';
-import { todoApi } from '../../services/todoService';
+import { useFetchCompletedTodos } from '../../hooks/useFetchTodos';
+import Spinner from '../ui/spinner/spinner';
 import { StyledCompletedTodos } from './styled';
 import TodoItemsList from '../todo-items-list/todo-items-list';
 import { Typography } from '@mui/material';
-import Spinner from '../ui/spinner/spinner';
 
 const CompletedTodos = () => {
-  const { data: todos, isLoading } = todoApi.useFetchQuery('?isDone=true');
+  const fetchTodosQ = useFetchCompletedTodos();
 
-  if (isLoading) {
+  if (fetchTodosQ.isLoading) {
     return <Spinner/>;
+  }
+
+  if (fetchTodosQ.isError) {
+    return <Typography variant="h4">Houston, we have a problem :(</Typography>;
   }
 
   return (
     <>
-      { todos
-        ? <StyledCompletedTodos><TodoItemsList todoItems={ todos }/></StyledCompletedTodos>
+      { fetchTodosQ.data
+        ? <StyledCompletedTodos><TodoItemsList todoItems={ fetchTodosQ.data }/></StyledCompletedTodos>
         : <Typography variant="h4">You have not any active todos :(</Typography> }
     </>
   );

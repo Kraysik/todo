@@ -3,15 +3,15 @@ import { TextField, Typography } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
 import { StyledAddBtn, StyledCreateTodo, StyledCreateTodoWrap, StyledFabIconClose } from './styled';
 import { TodoItemStructure } from '../todo-items-list/todo-items-list';
-import { todoApi } from '../../services/todoService';
 import { showCreateTodoForm } from '../../store/reducers/uiSlice';
 import { useAppDispatch } from '../../hooks/redux';
+import { useCreateTodo } from '../../hooks/useCreateTodo';
 
 // Задержка анимации и таймаута вызова метода onClose в мс.
 const transitionCloseDelay: number = 150;
 
 const CreateTodo = () => {
-  const [createTodo] = todoApi.useCreateMutation();
+  const createTodoM = useCreateTodo();
   const dispatch = useAppDispatch();
 
   const emptyTodo: TodoItemStructure = useMemo(() => ({ name: '', description: '', isDone: false }), []);
@@ -28,18 +28,13 @@ const CreateTodo = () => {
   };
 
   const handleCreateTodo = () => {
-    createTodo(todo);
+    createTodoM.mutateAsync(todo);
     handleClose();
   };
 
-  /* TODO
-  *   Как избежать ререндеров всего компонента, если я хочу обновить только одно свойство?
-  *   Не могу вкурить, как это сделать.
-  * */
   const handleNameChanged = (event: React.ChangeEvent<HTMLInputElement>) => {
     setTodo({ ...todo, name: event.target.value });
   };
-
   const handleDescriptionChanged = (event: React.ChangeEvent<HTMLInputElement>) => {
     setTodo({ ...todo, description: event.target.value });
   };
