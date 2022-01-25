@@ -22,7 +22,7 @@ function App() {
     <StyledApp className="app">
       <CreateTodoForm/>
       <Container maxWidth="lg">
-        <StyledAppTitle variant="h3">Simple design-less "todo" app</StyledAppTitle>
+        <StyledAppTitle variant="h3">Simple design-less "todo" app bla bla</StyledAppTitle>
 
         <ActionButtons/>
 
