@@ -1,0 +1,26 @@
+version: '3.9'
+
+services:
+  frontend:
+    build:
+      context: ./client
+      dockerfile: Dockerfile.prod
+    container_name: todo-frontend
+    command: serve -s build -l 3000
+    ports:
+      - "3000:3000"
+    restart: unless-stopped
+    depends_on:
+      - api
+
+
+  api:
+    build: ./server
+    container_name: todo-backend
+    command: yarn prod
+    restart: unless-stopped
+    ports:
+      - "3001:3001"
+    environment:
+      - PORT=3001
+      - DB_URL=mongodb+srv://Kraysik:Kraysik_69@todo.0vy18.mongodb.net/Todo?retryWrites=true&w=majority

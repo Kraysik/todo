@@ -4,7 +4,6 @@ const bodyParser = require('koa-bodyparser');
 const json = require('koa-json');
 const mongoose = require('mongoose');
 const todoRouter = require('./routes/todo-router');
-require('dotenv').config();
 
 
 const PORT = process.env.PORT;
@@ -20,4 +19,4 @@ mongoose.connect(DB_URL);
 app.use(json())
   .use(todoRouter.routes());
 
-app.listen(PORT);
+app.listen(PORT, () => {console.log(`Backend running on port ${PORT}`)});
