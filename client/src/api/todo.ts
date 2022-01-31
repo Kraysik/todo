@@ -6,7 +6,7 @@ export interface RequestParams {
   isDone: boolean;
 }
 export const fetchTodos =  async (requestParams: RequestParams) => {
-  const { data } = await API.get<TodoItem[]>(`/todos`, {
+  const { data } = await API.get<TodoItem[]>(`/todo/all`, {
     params: requestParams
   });
 

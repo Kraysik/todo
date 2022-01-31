@@ -1,22 +1,20 @@
-const Koa = require('koa');
-const cors = require('@koa/cors');
-const bodyParser = require('koa-bodyparser');
-const json = require('koa-json');
+const fastify = require('fastify')({ logger: true });
 const mongoose = require('mongoose');
-const todoRouter = require('./routes/todo-router');
 
 const PORT = process.env.PORT;
 const DB_URL = process.env.DB_URL;
 
-const app = new Koa();
-
-app.use(bodyParser())
-  .use(cors());
-
 mongoose.connect(DB_URL);
 
-app.use(json())
-  .use(todoRouter.routes());
+fastify.register(require('./routes/todo'));
 
-app.listen(PORT);
+const start = async () => {
+  try {
+    await fastify.listen(PORT, '0.0.0.0')
+  } catch (err) {
+    fastify.log.error(err)
+    process.exit(1)
+  }
+}
 
+start();
